@@ -134,7 +134,7 @@ class OneCard {
         }
         const date = new Date()
         const now = moment(date).format('yy-MM-DD')
-        const pas = moment(date.setDate(date.getDate() - 10)).format('yy-MM-DD')
+        const pas = moment(date.setDate(date.getDate() - 30)).format('yy-MM-DD')
         payload.ctl00$ContentPlaceHolder1$txtStartDate = pas
         payload.ctl00$ContentPlaceHolder1$txtEndDate = now
         const res = await this.session({
@@ -149,7 +149,41 @@ class OneCard {
     }
 
     public async getAttendance() {
-
+        const url = 'http://ykt.zstu.edu.cn/SelfSearch/User/OriginalRecord.aspx'
+        const essentials = await this.getEssentials(url)
+        const payload = {
+            __VIEWSTATE: essentials.viewState,
+            __VIEWSTATEGENERATOR: essentials.viewStateGenerate,
+            __EVENTVALIDATION: essentials.eventValidation,
+            ctl00$ContentPlaceHolder1$txtStartDate: '',
+            ctl00$ContentPlaceHolder1$txtEndDate: '',
+            ctl00$ContentPlaceHolder1$btnSearch: '查   询'
+        }
+        const date = new Date()
+        const now = moment(date).format('yy-MM-DD')
+        const pas = moment(date.setDate(date.getDate() - 30)).format('yy-MM-DD')
+        payload.ctl00$ContentPlaceHolder1$txtStartDate = pas
+        payload.ctl00$ContentPlaceHolder1$txtEndDate = now
+        const res = await this.session({
+            url: url,
+            data: QueryString.stringify(payload),
+            method: 'post',
+            validateStatus: () => true
+        }).then(value => {
+            return value.data
+        })
+        let ret: any = { code:0, msg: '获取成功', data: [] }
+        let recordReg = /<td>[^&nbsp;]*?<\/td><td>.*?<\/td><td>(.*?)<\/td><td>(.*?)<\/td>/g
+        const records = String(res).match(recordReg)
+        recordReg = /<td>.*?<\/td><td>.*?<\/td><td>(.*?)<\/td><td>(.*?)<\/td>/
+        records?.forEach(record => {
+        let execed = recordReg.exec(record)
+            ret.data.push({
+                when: execed?.at(1),
+                where: execed?.at(2)
+            })
+        })
+        return ret
     }
 }
 
