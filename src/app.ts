@@ -4,6 +4,7 @@ import 'express-async-errors'
 import Database from './util/Database'
 import Logger from './util/Logger'
 import CommonRouter from './route/CommonRouter'
+import Error from './core/Error'
 
 Database.connect()
 const app = express()
@@ -19,7 +20,8 @@ app.use(express.urlencoded({
 }))
 
 /* Registe routers */
-app.use(CommonRouter)
+app.use('/common', CommonRouter)
+app.use(Error.errorMidware)
 
 app.listen(expressConfig.port, () => {
     logger.info('Service started')
