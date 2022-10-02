@@ -54,6 +54,21 @@ class Formatter {
         }
         throw Error('获取失败')
     }
+
+    public static Attendance(res: any) {
+        let ret: any = { code:0, msg: '获取成功', data: [] }
+        let recordReg = /<td>[^&nbsp;]*?<\/td><td>.*?<\/td><td>(.*?)<\/td><td>(.*?)<\/td>/g
+        const records = String(res).match(recordReg)
+        recordReg = /<td>.*?<\/td><td>.*?<\/td><td>(.*?)<\/td><td>(.*?)<\/td>/
+        records?.forEach(record => {
+        let execed = recordReg.exec(record)
+            ret.data.push({
+                when: execed?.at(1),
+                where: execed?.at(2)
+            })
+        })
+        return ret
+    }
 }
 
 export default Formatter
