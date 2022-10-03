@@ -1,5 +1,5 @@
 class Functions {
-    public static isNumber(value: string | number): boolean {
+    public static isNumber(value?: string | number): boolean {
         return ((value != null) && (value !== '') && !isNaN(Number(value.toString())));
     }
 }
