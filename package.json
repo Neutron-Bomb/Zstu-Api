@@ -20,7 +20,8 @@
     "qs": "^6.11.0",
     "tesseract.js": "^3.0.3",
     "tough-cookie": "^4.1.2",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "zlib": "^1.0.5"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",

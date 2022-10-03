@@ -69,6 +69,23 @@ class Formatter {
         })
         return ret
     }
+
+    public static ExerciseMileage(res: any) {
+        let ret: any = { code: 0, msg: '获取成功', data: { total : 0 } }
+        const patternOne = /区域内运动:(.*?)公里/
+        const patternTwo = /校内定向跑:(.*?)公里/
+        const resultOne = patternOne.exec(res.m)
+        const resultTwo = patternTwo.exec(res.m)
+        if (resultOne) {
+            ret.data.region = parseFloat(parseFloat(resultOne[1]).toFixed(1))
+            ret.data.total = parseFloat(parseFloat(ret.data.region).toFixed(1))
+        }
+        if (resultTwo) {
+            ret.data.directional = parseFloat(parseFloat(resultTwo[1]).toFixed(1))
+            ret.data.total = parseFloat((parseFloat(ret.data.directional) + parseFloat(ret.data.total)).toFixed(1))
+        }
+        return ret
+    }
 }
 
 export default Formatter

@@ -1,4 +1,5 @@
 import QueryString from "qs";
+import { gzip } from "zlib";
 import Functions from "../util/Functions";
 import createSession from "../util/Session";
 import Formatter from "./Formatter";
@@ -26,6 +27,33 @@ class Common {
             return value.data
         })
         return Formatter.Electricity(res)
+    }
+
+    public static async ExerciseMileage(studentId: string) {
+        const url = 'http://10.11.246.182:8029/DragonFlyServ/Api/webserver/getRunDataSummary'
+        const payload = JSON.stringify({
+            studentno: studentId,
+            uid: studentId
+        })
+        const gzipedData = await new Promise((resolve, reject) => {
+            gzip(payload, (err, result) => {
+                if (err) {
+                    reject(err)
+                }
+                resolve(result)
+            })
+        }).then((value) => {
+            return value
+        })
+
+        const res = await this.session({
+            url: url,
+            method: "POST",
+            data: gzipedData
+        }).then((value) => {
+            return value.data
+        })
+        return Formatter.ExerciseMileage(res)
     }
 }
 
