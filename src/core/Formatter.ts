@@ -86,6 +86,25 @@ class Formatter {
         }
         return ret
     }
+
+    public static Grades(res: any) {
+        const ret: any = { code: 0, msg: '获取成功', data: [] }
+        /* what when who grade displayGrade status credits */
+        if (res['items']) {
+            res.items.forEach((record: any) => {
+                ret.data.push({
+                    what: record['kcmc'],
+                    when: record['tjsj'],
+                    who: record['tjrxm'],
+                    grade: record['bfzcj'],
+                    displayGrade: record['cj'],
+                    credits: record['xf'],
+                    creditsGrade: record['jd']
+                })
+            });
+        }
+        return ret
+    }
 }
 
 export default Formatter
