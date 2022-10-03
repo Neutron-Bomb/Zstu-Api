@@ -86,6 +86,79 @@ class Formatter {
         }
         return ret
     }
+
+    public static Grades(res: any) {
+        const ret: any = { code: 0, msg: '获取成功', data: [] }
+        /* what when who grade displayGrade status credits */
+        if (res['items']) {
+            res.items.forEach((record: any) => {
+                ret.data.push({
+                    what: record['kcmc'],
+                    when: record['tjsj'],
+                    who: record['tjrxm'],
+                    grade: record['bfzcj'],
+                    displayGrade: record['cj'],
+                    credits: record['xf'],
+                    creditsGrade: record['jd']
+                })
+            })
+        }
+        return ret
+    }
+
+    public static Schedule(res: any) {
+        const ret: any = { code: 0, msg: '获取成功', data: [] }
+        if (res['kbList']) {
+            res.kbList.forEach((record: any) => {
+                ret.data.push({
+                    what: record['kcmc'],
+                    who: record['xm'],
+                    where: record['cdmc'],
+                    when: {
+                        week: record['day'],
+                        day: record['jcs']
+                    },
+                    class: record['kclb'],
+                    credits: record['xf']
+                })
+            })
+        }
+        return ret
+    }
+
+    public static TurnMajor(res: any) {
+        const ret: any = { code: 0, msg: '获取成功', data: [] }
+        if (res['items']) {
+            res.items.forEach((record: any) => {
+                ret.data.push({
+                    to: {
+                        academic: record['zrjgmc'],
+                        major: record['zrzymc']
+                    },
+                    reason: record['sqly'],
+                    status: record['shzt'],
+                    statusUpdateDate: record['shsj'],
+                    applyTime: record['sqsj']
+                })
+            })
+        }
+        return ret
+    }
+
+    public static Exams(res: any) {
+        const ret: any = { code: 0, msg: '获取成功', data: [] }
+        if (res.items) {
+            res.items.forEach((record: any) => {
+                ret.data.push({
+                    what: record['kcmc'],
+                    where: record['jxdd'],
+                    who: record['jsxx'],
+                    how: record['ksfs']
+                })
+            });
+        }
+        return ret
+    }
 }
 
 export default Formatter
