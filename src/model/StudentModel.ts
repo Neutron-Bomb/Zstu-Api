@@ -1,4 +1,5 @@
 import { Schema  } from 'mongoose'
+import Database from '../util/Database'
 
 const StudentRecord = new Schema({
     studentId: {
@@ -19,4 +20,6 @@ const StudentRecord = new Schema({
     }
 })
 
-export { StudentRecord }
+const StudentModel = Database.model('student', StudentRecord)
+
+export { StudentModel }

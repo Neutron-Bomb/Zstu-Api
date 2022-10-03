@@ -1,11 +1,12 @@
 import { Schema } from 'mongoose'
+import Database from '../util/Database'
 
 const CookieRecord = new Schema({
     studentId: {
         type: String,
         required: true
     },
-    cookie: {
+    cookieJar: {
         type: String,
         required: true
     },
@@ -19,4 +20,6 @@ const CookieRecord = new Schema({
     }
 })
 
-export { CookieRecord }
+const CookieModel = Database.model('cookie', CookieRecord)
+
+export { CookieModel }

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose, { Schema } from 'mongoose'
 import * as mongooseConfig from '../config/database.json'
 import Logger from '../util/Logger'
 
@@ -30,9 +30,9 @@ const Database = {
             logger.warn('Database already connected')
         }
     },
-    model: (model: string) => {
+    model: (collection: string, model: Schema) => {
         if (isConnected) {
-            return mongoose.model(model)
+            return mongoose.model(collection, model)
         } else {
             throw Error('Database was not connected')
         }

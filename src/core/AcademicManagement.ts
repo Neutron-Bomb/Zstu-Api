@@ -121,6 +121,10 @@ class AcademicManagement {
         }
     }
 
+    public getCookieJar() {
+        return this.session.defaults.jar
+    }
+
     public async getGrades(year: number, semester: SEMESTER = SEMESTER.ALL) {
         if (!this.testIfLogined()) {
             throw Error('尚未登录教务系统')
