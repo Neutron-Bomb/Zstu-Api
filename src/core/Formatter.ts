@@ -125,6 +125,40 @@ class Formatter {
         }
         return ret
     }
+
+    public static TurnMajor(res: any) {
+        const ret: any = { code: 0, msg: '获取成功', data: [] }
+        if (res['items']) {
+            res.items.forEach((record: any) => {
+                ret.data.push({
+                    to: {
+                        academic: record['zrjgmc'],
+                        major: record['zrzymc']
+                    },
+                    reason: record['sqly'],
+                    status: record['shzt'],
+                    statusUpdateDate: record['shsj'],
+                    applyTime: record['sqsj']
+                })
+            })
+        }
+        return ret
+    }
+
+    public static Exams(res: any) {
+        const ret: any = { code: 0, msg: '获取成功', data: [] }
+        if (res.items) {
+            res.items.forEach((record: any) => {
+                ret.data.push({
+                    what: record['kcmc'],
+                    where: record['jxdd'],
+                    who: record['jsxx'],
+                    how: record['ksfs']
+                })
+            });
+        }
+        return ret
+    }
 }
 
 export default Formatter

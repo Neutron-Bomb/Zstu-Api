@@ -163,6 +163,41 @@ class AcademicManagement {
         })
         return Formatter.Schedule(res)
     }
+
+    public async getTurnMajor(year: number, semester: SEMESTER) {
+        const url = 'https://jwglxt.webvpn.zstu.edu.cn/jwglxt/xszzy/xszzysqgl_cxXszzysqIndex.html?doType=query&pkey=&gnmkdm=N106204'
+        const payload =  {
+            zrxnm: year,
+            zrxqm: semester
+        }
+        const res = await this.session({
+            url: url,
+            method: 'post',
+            data: QueryString.stringify(payload),
+            validateStatus: () => true
+        }).then(value => {
+            return value.data
+        })
+        return Formatter.TurnMajor(res)
+    }
+
+    public async getExams(year: number, semester: SEMESTER) {
+        const url = 'https://jwglxt.webvpn.zstu.edu.cn/jwglxt/kwgl/kscx_cxXsksxxIndex.html?doType=query&gnmkdm=N358105'
+        const payload = {
+            xnm: year,
+            xqm: semester,
+            'queryModel.showCount': 5000
+        }
+        const res = await this.session({
+            url: url,
+            method: 'post',
+            data: QueryString.stringify(payload),
+            validateStatus: () => true
+        }).then(value => {
+            return value.data
+        })
+        return Formatter.Exams(res)
+    }
 }   
 
 export default AcademicManagement
