@@ -101,7 +101,27 @@ class Formatter {
                     credits: record['xf'],
                     creditsGrade: record['jd']
                 })
-            });
+            })
+        }
+        return ret
+    }
+
+    public static Schedule(res: any) {
+        const ret: any = { code: 0, msg: '获取成功', data: [] }
+        if (res['kbList']) {
+            res.kbList.forEach((record: any) => {
+                ret.data.push({
+                    what: record['kcmc'],
+                    who: record['xm'],
+                    where: record['cdmc'],
+                    when: {
+                        week: record['day'],
+                        day: record['jcs']
+                    },
+                    class: record['kclb'],
+                    credits: record['xf']
+                })
+            })
         }
         return ret
     }

@@ -121,7 +121,7 @@ class AcademicManagement {
         }
     }
 
-    async getGrades(year: number, semester: SEMESTER = SEMESTER.ALL) {
+    public async getGrades(year: number, semester: SEMESTER = SEMESTER.ALL) {
         if (!this.testIfLogined()) {
             throw Error('尚未登录教务系统')
         }
@@ -139,6 +139,29 @@ class AcademicManagement {
             return value.data
         })
         return Formatter.Grades(res)
+    }
+
+    public async getSchedule(year: number, semester: SEMESTER) {
+        if (!this.testIfLogined) {
+            throw Error('未登录登录教务系统')
+        }
+        if(semester == SEMESTER.ALL) {
+            throw Error('semester不可为SEMESTER.ALL')
+        }
+        const url = 'https://jwglxt.webvpn.zstu.edu.cn/jwglxt/kbcx/xskbcx_cxXsgrkb.html?gnmkdm=N2151'
+        const payload = {
+            xnm: year,
+            xqm: semester
+        }
+        const res = await this.session({
+            url: url,
+            method: 'post',
+            data: QueryString.stringify(payload),
+            validateStatus: () => true
+        }).then(value => {
+            return value.data
+        })
+        return Formatter.Schedule(res)
     }
 }   
 
