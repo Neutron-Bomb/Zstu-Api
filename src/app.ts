@@ -1,7 +1,6 @@
 import express from 'express'
 import expressConfig from './config/express.json'
 import 'express-async-errors'
-import Database from './util/Database'
 import Logger from './util/Logger'
 import CommonRouter from './route/CommonRouter'
 import Error from './core/Error'
