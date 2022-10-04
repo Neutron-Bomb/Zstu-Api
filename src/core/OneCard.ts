@@ -15,15 +15,14 @@ class OneCard {
     private password?: string
     private session: AxiosInstance
 
-    constructor(studentId?: string, password?: string, cookieJar?: CookieJar) {
+    constructor(studentId?: string, password?: string, cookieJarJson?: string) {
         this.studentId = studentId
         this.password = password
-        this.cookieJar = cookieJar
-        this.session = createSession(this.cookieJar)
+        this.session = createSession(cookieJarJson ? CookieJar.fromJSON(cookieJarJson) : undefined)
     }
 
-    public static fromCookieJar(cookieJar: CookieJar) {
-        return new this(undefined, undefined, cookieJar)
+    public static fromCookieJar(cookieJarJson: string) {
+        return new this(undefined, undefined, cookieJarJson)
     }
 
     public static fromUserPass(studentId: string, password: string) {
