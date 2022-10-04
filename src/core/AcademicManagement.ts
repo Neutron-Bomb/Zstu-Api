@@ -4,6 +4,7 @@ import { CookieJar } from "tough-cookie";
 import createSession from "../util/Session";
 import CryptoJS from 'crypto-js'
 import Formatter from "./Formatter";
+import Logger from "../util/Logger";
 
 export const enum SEMESTER {
     ALL = '',
@@ -13,23 +14,27 @@ export const enum SEMESTER {
 }
 
 class AcademicManagement {
+    private static logger = Logger.getLogger('default')
     private studentId?: string
     private password?: string
     private session: AxiosInstance
+    public readonly permission = 'academic management'
 
 
-    private constructor(studentId?: string, password?: string, cookieJar?: CookieJar) {
+    private constructor(studentId?: string, password?: string, cookieJarJson?: string) {
         this.studentId = studentId
         this.password = password
-        this.session = createSession(cookieJar)
+        this.session = createSession(cookieJarJson ? CookieJar.fromJSON(cookieJarJson) : undefined)
     }
 
     public static fromUserPass(studentId: string, password: string) {
+        this.logger.info(`fromUserPass`)
         return new this(studentId, password)
     }
-
-    public static fromCookieJar(cookieJar: CookieJar) {
-        return new this(undefined, undefined, cookieJar)
+    
+    public static fromCookieJar(cookieJarJson: string) {
+        this.logger.info(`fromCookieJar`)
+        return new this(undefined, undefined, cookieJarJson)
     }
 
     private encryptoPassword(password: string, crypto: string) {
@@ -55,7 +60,7 @@ class AcademicManagement {
         }
     }
 
-    private async testIfLogined() {
+    public async isLogined() {
         const url = 'https://jwglxt.webvpn.zstu.edu.cn/sso/jasiglogin'
         const res = await this.session({
             url: url
@@ -69,7 +74,7 @@ class AcademicManagement {
     }
 
     public async login() {
-        if (await this.testIfLogined()) {
+        if (await this.isLogined()) {
             return
         }
 
@@ -116,7 +121,7 @@ class AcademicManagement {
         }).then(value => {
             return value.data
         })
-        if (!await this.testIfLogined()) {
+        if (!await this.isLogined()) {
             throw Error('教务管理系统登陆失败')
         }
     }
@@ -125,8 +130,8 @@ class AcademicManagement {
         return this.session.defaults.jar
     }
 
-    public async getGrades(year: number, semester: SEMESTER = SEMESTER.ALL) {
-        if (!this.testIfLogined()) {
+    public async getGrades(year: string, semester: SEMESTER = SEMESTER.ALL) {
+        if (!this.isLogined()) {
             throw Error('尚未登录教务系统')
         }
         const url = 'https://jwglxt.webvpn.zstu.edu.cn/jwglxt/cjcx/cjcx_cxXsgrcj.html?doType=query'
@@ -145,8 +150,8 @@ class AcademicManagement {
         return Formatter.Grades(res)
     }
 
-    public async getSchedule(year: number, semester: SEMESTER) {
-        if (!this.testIfLogined) {
+    public async getSchedule(year: string, semester: SEMESTER) {
+        if (!this.isLogined) {
             throw Error('未登录登录教务系统')
         }
         if(semester == SEMESTER.ALL) {
@@ -168,7 +173,7 @@ class AcademicManagement {
         return Formatter.Schedule(res)
     }
 
-    public async getTurnMajor(year: number, semester: SEMESTER) {
+    public async getTurnMajor(year: string, semester: SEMESTER) {
         const url = 'https://jwglxt.webvpn.zstu.edu.cn/jwglxt/xszzy/xszzysqgl_cxXszzysqIndex.html?doType=query&pkey=&gnmkdm=N106204'
         const payload =  {
             zrxnm: year,
@@ -185,7 +190,7 @@ class AcademicManagement {
         return Formatter.TurnMajor(res)
     }
 
-    public async getExams(year: number, semester: SEMESTER) {
+    public async getExams(year: string, semester: SEMESTER) {
         const url = 'https://jwglxt.webvpn.zstu.edu.cn/jwglxt/kwgl/kscx_cxXsksxxIndex.html?doType=query&gnmkdm=N358105'
         const payload = {
             xnm: year,

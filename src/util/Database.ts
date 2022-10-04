@@ -21,21 +21,20 @@ mongoose.connection.on('error', (error) => {
     logger.error(error)
 })
 
+async function connect() {
+    if (!isConnected) {
+        logger.info('Start connecting to database')
+        await mongoose.connect(mongooseConfig.uri, mongooseConfig.config).then(() => { isConnected = true })
+    }
+}
+
 const Database = {
-    connect: () => {
-        if (!isConnected) {
-            logger.info('Start connecting to database')
-            mongoose.connect(mongooseConfig.uri, mongooseConfig.config)
-        } else {
-            logger.warn('Database already connected')
-        }
-    },
-    model: (collection: string, model: Schema) => {
+    model: async (collection: string, model: Schema) => {
+        await connect()
         if (isConnected) {
             return mongoose.model(collection, model)
-        } else {
-            throw Error('Database was not connected')
         }
+        throw Error('数据库连接错误')
     }
 }
 

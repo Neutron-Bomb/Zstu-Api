@@ -6,8 +6,8 @@ import Logger from './util/Logger'
 import CommonRouter from './route/CommonRouter'
 import Error from './core/Error'
 import OneCardRouter from './route/OneCardRouter'
+import AcademicManagementRouter from './route/AcademicManagementRouter'
 
-Database.connect()
 const app = express()
 const logger = Logger.getLogger('express')
 
@@ -23,6 +23,7 @@ app.use(express.urlencoded({
 /* Registe routers */
 app.use('/common', CommonRouter)
 app.use('/onecard', OneCardRouter)
+app.use('/academic', AcademicManagementRouter)
 
 app.use(Error.errorMidware)
 

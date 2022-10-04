@@ -7,19 +7,19 @@ const CookieRecord = new Schema({
         required: true
     },
     cookieJar: {
-        type: String,
-        required: true
-    },
-    expire: {
-        type: Date,
+        type: JSON,
         required: true
     },
     permission: {
         type: String,
+        required: true
+    },
+    expire: {
+        type: Number,
         required: true
     }
 })
 
 const CookieModel = Database.model('cookie', CookieRecord)
 
-export { CookieModel }
+export default CookieModel
