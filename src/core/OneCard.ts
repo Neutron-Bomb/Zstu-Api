@@ -14,7 +14,6 @@ class OneCard {
     private studentId?: string
     private password?: string
     private session: AxiosInstance
-    private logined = false
 
     constructor(studentId?: string, password?: string, cookieJar?: CookieJar) {
         this.studentId = studentId
@@ -70,7 +69,21 @@ class OneCard {
         }
     }
 
+    public async testIfLogined() {
+        const url = 'http://ykt.zstu.edu.cn'
+        const res = await this.session({
+            url: url
+        }).then(value => value.data)
+        if (res.match('用户登录')) {
+            return false
+        }
+        return true
+    }
+
     public async login() {
+        if (await this.testIfLogined()) {
+            return
+        }
         const url = 'http://ykt.zstu.edu.cn/SelfSearch/login.aspx'
         const essentials = await this.getEssentials(url)
         for (let cnt = 0; cnt < 5; ++cnt) {
@@ -95,8 +108,7 @@ class OneCard {
             }).then(value => {
                 return value.data
             })
-            if (String(res).search('用户登录') == -1) {
-                this.logined = true
+            if (await this.testIfLogined()) {
                 return
             }
         }
@@ -104,8 +116,8 @@ class OneCard {
         throw Error('Failed atfer 5 logins')
     }
 
-    public isLogined() {
-        return this.logined
+    public getCookieJar() {
+        return this.session.defaults.jar
     }
 
     public async getBalance() {

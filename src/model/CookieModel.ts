@@ -1,22 +1,25 @@
 import { Schema } from 'mongoose'
+import Database from '../util/Database'
 
 const CookieRecord = new Schema({
     studentId: {
         type: String,
         required: true
     },
-    cookie: {
-        type: String,
-        required: true
-    },
-    expire: {
-        type: Date,
+    cookieJar: {
+        type: JSON,
         required: true
     },
     permission: {
         type: String,
         required: true
+    },
+    expire: {
+        type: Number,
+        required: true
     }
 })
 
-export { CookieRecord }
+const CookieModel = Database.model('cookie', CookieRecord)
+
+export default CookieModel
