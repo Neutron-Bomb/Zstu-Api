@@ -57,17 +57,18 @@ class Formatter {
     }
 
     public static Attendance(res: any) {
-        let ret: any = { code:0, msg: '获取成功', data: [] }
+        let ret: any = { code:0, msg: '获取成功', data: { count: 0, items: [] } }
         let recordReg = /<td>[^&nbsp;]*?<\/td><td>.*?<\/td><td>(.*?)<\/td><td>(.*?)<\/td>/g
         const records = String(res).match(recordReg)
-        recordReg = /<td>.*?<\/td><td>.*?<\/td><td>(.*?)<\/td><td>(.*?)<\/td>/
+        recordReg = /<td>[^&nbsp;]*?<\/td><td>.*?<\/td><td>(.*?)<\/td><td>(.*?)<\/td>/
         records?.forEach(record => {
         let execed = recordReg.exec(record)
-            ret.data.push({
+            ret.data.items.push({
                 when: execed?.at(1),
                 where: execed?.at(2)
             })
         })
+        ret.data.count = ret.data.items.length
         return ret
     }
 
@@ -89,11 +90,11 @@ class Formatter {
     }
 
     public static Grades(res: any) {
-        const ret: any = { code: 0, msg: '获取成功', data: [] }
+        const ret: any = { code: 0, msg: '获取成功', data: { count: 0, items: [] } }
         /* what when who grade displayGrade status credits */
         if (res['items']) {
             res.items.forEach((record: any) => {
-                ret.data.push({
+                ret.data.items.push({
                     what: record['kcmc'],
                     when: record['tjsj'],
                     who: record['tjrxm'],
@@ -104,14 +105,15 @@ class Formatter {
                 })
             })
         }
+        ret.data.count = ret.data.items.length
         return ret
     }
 
     public static Schedule(res: any) {
-        const ret: any = { code: 0, msg: '获取成功', data: [] }
+        const ret: any = { code: 0, msg: '获取成功', data: { count: 0, items: [] } }
         if (res['kbList']) {
             res.kbList.forEach((record: any) => {
-                ret.data.push({
+                ret.data.items.push({
                     what: record['kcmc'],
                     who: record['xm'],
                     where: record['cdmc'],
@@ -124,14 +126,15 @@ class Formatter {
                 })
             })
         }
+        ret.data.count = ret.data.items.length
         return ret
     }
 
     public static TurnMajor(res: any) {
-        const ret: any = { code: 0, msg: '获取成功', data: [] }
+        const ret: any = { code: 0, msg: '获取成功', data: { count: 0, items: []} }
         if (res['items']) {
             res.items.forEach((record: any) => {
-                ret.data.push({
+                ret.data.items.push({
                     to: {
                         academic: record['zrjgmc'],
                         major: record['zrzymc']
@@ -143,14 +146,15 @@ class Formatter {
                 })
             })
         }
+        ret.data.count = ret.data.items.length
         return ret
     }
 
     public static Exams(res: any) {
-        const ret: any = { code: 0, msg: '获取成功', data: [] }
+        const ret: any = { code: 0, msg: '获取成功', data: { count: 0, items: [] } }
         if (res.items) {
             res.items.forEach((record: any) => {
-                ret.data.push({
+                ret.data.items.push({
                     what: record['kcmc'],
                     where: record['jxdd'],
                     who: record['jsxx'],
@@ -158,6 +162,7 @@ class Formatter {
                 })
             });
         }
+        ret.data.count = ret.data.items.length
         return ret
     }
 }
