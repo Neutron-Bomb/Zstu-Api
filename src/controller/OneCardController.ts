@@ -27,12 +27,12 @@ async function Balance(req: Request, res: Response) {
 
 async function Consumption(req: Request, res: Response) {
     const oc = await getOneCard(req)
-    res.json(await oc.getConsumption())
+    res.json(await oc.getConsumption(req.body.startDate, req.body.endDate))
 }
 
 async function Attendance(req: Request, res: Response) {
     const oc = await getOneCard(req)
-    res.json(await oc.getAttendance())
+    res.json(await oc.getAttendance(req.body.startDate, req.body.endDate))
 }
 
 const OneCardController = {

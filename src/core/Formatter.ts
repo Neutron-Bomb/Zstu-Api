@@ -57,17 +57,18 @@ class Formatter {
     }
 
     public static Attendance(res: any) {
-        let ret: any = { code:0, msg: '获取成功', data: [] }
+        let ret: any = { code:0, msg: '获取成功', data: { count: 0, items: [] } }
         let recordReg = /<td>[^&nbsp;]*?<\/td><td>.*?<\/td><td>(.*?)<\/td><td>(.*?)<\/td>/g
         const records = String(res).match(recordReg)
-        recordReg = /<td>.*?<\/td><td>.*?<\/td><td>(.*?)<\/td><td>(.*?)<\/td>/
+        recordReg = /<td>[^&nbsp;]*?<\/td><td>.*?<\/td><td>(.*?)<\/td><td>(.*?)<\/td>/
         records?.forEach(record => {
         let execed = recordReg.exec(record)
-            ret.data.push({
+            ret.data.items.push({
                 when: execed?.at(1),
                 where: execed?.at(2)
             })
         })
+        ret.data.count = ret.data.items.length
         return ret
     }
 

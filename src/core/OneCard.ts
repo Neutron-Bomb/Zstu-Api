@@ -10,7 +10,6 @@ import Formatter from "./Formatter";
 class OneCard {
     public permission = 'OneCard'
 
-    private cookieJar?: CookieJar
     private studentId?: string
     private password?: string
     private session: AxiosInstance
@@ -125,9 +124,7 @@ class OneCard {
         return Formatter.Balace(res)
     }
 
-    public async getConsumption() {
-        const url = 'http://ykt.zstu.edu.cn/SelfSearch/User/ConsumeInfo.aspx'
-
+    private async doQuery(url: string, startDate?: string, endDate?: string) {
         let essentials = await this.getEssentials(url)
         const payload: any = {
             __EVENTTARGET: '',
@@ -142,8 +139,8 @@ class OneCard {
         }
 
         const date = new Date()
-        const now = moment(date).format('yy-MM-DD')
-        const pas = moment(date.setDate(date.getDate() - 30)).format('yy-MM-DD')
+        const now = endDate || moment(date).format('yy-MM-DD')
+        const pas = startDate ||moment(date.setDate(date.getDate() - 30)).format('yy-MM-DD')
         payload.ctl00$ContentPlaceHolder1$txtStartDate = pas
         payload.ctl00$ContentPlaceHolder1$txtEndDate = now
 
@@ -167,33 +164,18 @@ class OneCard {
             payload.ctl00$ContentPlaceHolder1$btnSearch ? delete payload.ctl00$ContentPlaceHolder1$btnSearch : undefined
             result += res
         }
-        return Formatter.Consumption(result)
+        return result
     }
 
-    public async getAttendance() {
+    public async getConsumption(startDate?: string, endDate?: string) {
+        const url = 'http://ykt.zstu.edu.cn/SelfSearch/User/ConsumeInfo.aspx'
+        const res = await this.doQuery(url, startDate, endDate)
+        return Formatter.Consumption(res)
+    }
+
+    public async getAttendance(startDate?: string, endDate?: string) {
         const url = 'http://ykt.zstu.edu.cn/SelfSearch/User/OriginalRecord.aspx'
-        const essentials = await this.getEssentials(url)
-        const payload = {
-            __VIEWSTATE: essentials.viewState,
-            __VIEWSTATEGENERATOR: essentials.viewStateGenerate,
-            __EVENTVALIDATION: essentials.eventValidation,
-            ctl00$ContentPlaceHolder1$txtStartDate: '',
-            ctl00$ContentPlaceHolder1$txtEndDate: '',
-            ctl00$ContentPlaceHolder1$btnSearch: '查   询'
-        }
-        const date = new Date()
-        const now = moment(date).format('yy-MM-DD')
-        const pas = moment(date.setDate(date.getDate() - 7)).format('yy-MM-DD')
-        payload.ctl00$ContentPlaceHolder1$txtStartDate = pas
-        payload.ctl00$ContentPlaceHolder1$txtEndDate = now
-        const res = await this.session({
-            url: url,
-            data: QueryString.stringify(payload),
-            method: 'post',
-            validateStatus: () => true
-        }).then(value => {
-            return value.data
-        })
+        const res = await this.doQuery(url, startDate, endDate)
         return Formatter.Attendance(res)
     }
 }
