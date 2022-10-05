@@ -32,6 +32,18 @@ Zstu-Api是编写Zstu-Bot的基础，也相当于是Api Bridger，Zstu-Api会转
 
 - [x] 出入宿舍楼情况
 
+## 安装
+
+```
+1. 安装MongoDB，并开启MongoDB服务器，无需任何设置
+2. 克隆并编译本项目
+git clone https://github.com/Neutron-Bomb/Zstu-Api
+cd Zstu-Api
+npm install && tsc
+3. 运行
+node out/app.js
+```
+
 ## 使用
 
 ### 教务系统
