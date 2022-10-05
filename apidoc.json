@@ -1,0 +1,11 @@
+{
+    "name": "Zstu-Api",
+    "version": "1.0.0",
+    "description": "浙江理工大学Api Bridger",
+    "title": "Zstu-Api 文档",
+    "url": "http://localhost",
+    "template": {
+        "withCompare": true,
+        "withGenerator": true
+    }
+}
