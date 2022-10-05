@@ -52,12 +52,8 @@ class OneCard {
     }
 
     /* ViewState & ViewStateGenerate & EventValidation */
-    private async getEssentials(url: string) {
-        const pageSource = await this.session({
-            url: url
-        }).then(value => {
-            return value.data
-        })
+    private async getEssentials(res: string) {
+        const pageSource = res?.startsWith('http') ? await this.session({url: res}).then(value => value.data) : res
         const viewStateReg = /id=\"__VIEWSTATE\" value=\"(.*?)\"/
         const viewStateGenerateReg = /id=\"__VIEWSTATEGENERATOR\" value=\"(.*?)\"/
         const eventValidationReg = /id=\"__EVENTVALIDATION\" value=\"(.*?)\"/
@@ -99,7 +95,7 @@ class OneCard {
                 txtVaildateCode: await this.captcha(),
                 hfIsManager: 0
             }
-            const res = await this.session({
+            await this.session({
                 url: url,
                 method: 'post',
                 data: QueryString.stringify(payload),
@@ -131,8 +127,9 @@ class OneCard {
 
     public async getConsumption() {
         const url = 'http://ykt.zstu.edu.cn/SelfSearch/User/ConsumeInfo.aspx'
-        const essentials = await this.getEssentials(url)
-        const payload = {
+
+        let essentials = await this.getEssentials(url)
+        const payload: any = {
             __EVENTTARGET: '',
             __EVENTARGUMENT: '',
             __VIEWSTATE: essentials.viewState,
@@ -143,20 +140,34 @@ class OneCard {
             ctl00$ContentPlaceHolder1$txtEndDate: '',
             ctl00$ContentPlaceHolder1$btnSearch: '查  询'
         }
+
         const date = new Date()
         const now = moment(date).format('yy-MM-DD')
         const pas = moment(date.setDate(date.getDate() - 30)).format('yy-MM-DD')
         payload.ctl00$ContentPlaceHolder1$txtStartDate = pas
         payload.ctl00$ContentPlaceHolder1$txtEndDate = now
-        const res = await this.session({
-            url: url,
-            method: 'post',
-            data: QueryString.stringify(payload),
-            validateStatus: () => true
-        }).then(value => {
-            return value.data
-        })
-        return Formatter.Consumption(res)
+
+        let res: string, result: string = ''
+        while (true) {
+            res = await this.session({
+                url: url,
+                method: 'post',
+                data: QueryString.stringify(payload),
+                validateStatus: () => true
+            }).then(value => value.data)
+            essentials = await this.getEssentials(res)
+            if (payload.__EVENTVALIDATION == essentials.eventValidation) {
+                break
+            }
+            payload.__EVENTTARGET = 'ctl00$ContentPlaceHolder1$AspNetPager1'
+            payload.__EVENTARGUMENT = (payload.__EVENTARGUMENT == '') ?  '2' : String(parseInt(payload.__EVENTARGUMENT) + 1)
+            payload.__VIEWSTATE = essentials.viewState
+            payload.__VIEWSTATEGENERATOR = essentials.viewStateGenerate
+            payload.__EVENTVALIDATION = essentials.eventValidation
+            payload.ctl00$ContentPlaceHolder1$btnSearch ? delete payload.ctl00$ContentPlaceHolder1$btnSearch : undefined
+            result += res
+        }
+        return Formatter.Consumption(result)
     }
 
     public async getAttendance() {
@@ -172,7 +183,7 @@ class OneCard {
         }
         const date = new Date()
         const now = moment(date).format('yy-MM-DD')
-        const pas = moment(date.setDate(date.getDate() - 30)).format('yy-MM-DD')
+        const pas = moment(date.setDate(date.getDate() - 7)).format('yy-MM-DD')
         payload.ctl00$ContentPlaceHolder1$txtStartDate = pas
         payload.ctl00$ContentPlaceHolder1$txtEndDate = now
         const res = await this.session({
