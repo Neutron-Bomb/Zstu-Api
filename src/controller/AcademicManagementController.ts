@@ -36,7 +36,9 @@ async function getAcademicManagement(req: Request) {
     const am = (cookie && cookie.expire > (new Date()).getTime()) ? AcademicManagement.fromCookieJar(cookie.cookieJar) : AcademicManagement.fromUserPass(studentId, password)
     await am.login()
     /* Logined if no error threw */
-    cookieModel.findOneAndUpdate( { $and: [ { studentId: studentId }, { permission: permission } ]}, { cookieJar: am.getCookieJar()?.toJSON(), expire: (new Date()).getTime() + 86400 }, { upsert: true, new: true }).catch(err => console.log(err))
+    if (cookie && cookie.expire <= (new Date()).getTime() || !cookie) {
+        cookieModel.findOneAndUpdate( { $and: [ { studentId: studentId }, { permission: permission } ]}, { cookieJar: am.getCookieJar()?.toJSON(), expire: (new Date()).getTime() + 1800 }, { upsert: true, new: true }).catch(err => console.log(err))
+    }
     return am
 }
 

@@ -15,7 +15,9 @@ async function getOneCard(req: Request) {
     const oc = (cookie && cookie.expire > (new Date()).getTime()) ? OneCard.fromCookieJar(cookie.cookieJar) : OneCard.fromUserPass(studentId, password)
     await oc.login()
     /* Logined if no error threw */
-    cookieModel.findOneAndUpdate( { $and: [ { studentId: studentId }, { permission: permission } ]}, { cookieJar: oc.getCookieJar()?.toJSON(), expire: (new Date()).getTime() + 86400 }, { upsert: true, new: true }).catch(err => console.log(err))
+    if (cookie && cookie.expire <= (new Date()).getTime() || !cookie) {
+        cookieModel.findOneAndUpdate( { $and: [ { studentId: studentId }, { permission: permission } ]}, { cookieJar: oc.getCookieJar()?.toJSON(), expire: (new Date()).getTime() + 1800 }, { upsert: true, new: true }).catch(err => console.log(err))
+    }
     return oc
     
 }
