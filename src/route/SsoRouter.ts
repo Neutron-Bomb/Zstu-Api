@@ -30,7 +30,7 @@ SsoRouter.post('/clockin/status', SsoController.SsoClockInStatusHandler)
 /**
  * @api {POST} /clockin/ 打卡
  * @apiGroup SSO
- * @apiDescription 获取指定账户消费记录
+ * @apiDescription 按照前一次的打卡信息提交打卡
  * 
  * @apiParam {String} studentId 学号
  * @apiParam {String} password SSO密码
