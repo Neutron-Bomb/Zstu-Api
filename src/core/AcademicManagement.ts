@@ -14,7 +14,6 @@ export const enum SEMESTER {
 }
 
 class AcademicManagement {
-    private static logger = Logger.getLogger('default')
     private studentId?: string
     private password?: string
     private session: AxiosInstance
@@ -28,12 +27,10 @@ class AcademicManagement {
     }
 
     public static fromUserPass(studentId: string, password: string) {
-        this.logger.info(`fromUserPass`)
         return new this(studentId, password)
     }
     
     public static fromCookieJar(cookieJarJson: string) {
-        this.logger.info(`fromCookieJar`)
         return new this(undefined, undefined, cookieJarJson)
     }
 

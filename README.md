@@ -32,6 +32,11 @@ Zstu-Api是编写Zstu-Bot的基础，也相当于是Api Bridger，Zstu-Api会转
 
 - [x] 出入宿舍楼情况
 
+### 打卡
+
+- [x] 查询打卡
+- [x] 打卡
+
 ## 安装
 
 ```
