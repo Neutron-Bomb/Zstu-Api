@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 
-async function SsoLoginHandler(req: Request, res: Response) {
+async function SsoClockInHandler(req: Request, res: Response) {
 
 }
 
 const SsoController = {
-    SsoLoginHandler
+    SsoClockInHandler
 }
 
-export { SsoController }
+export default SsoController
