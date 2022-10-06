@@ -6,6 +6,7 @@ import CommonRouter from './route/CommonRouter'
 import Error from './core/Error'
 import OneCardRouter from './route/OneCardRouter'
 import AcademicManagementRouter from './route/AcademicManagementRouter'
+import SsoRouter from './route/SsoRouter'
 
 const app = express()
 const logger = Logger.getLogger('express')
@@ -23,6 +24,7 @@ app.use(express.urlencoded({
 app.use('/common', CommonRouter)
 app.use('/onecard', OneCardRouter)
 app.use('/academic', AcademicManagementRouter)
+app.use('/sso', SsoRouter)
 
 app.use(Error.errorMidware)
 

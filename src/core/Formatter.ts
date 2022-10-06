@@ -165,6 +165,23 @@ class Formatter {
         ret.data.count = ret.data.items.length
         return ret
     }
+
+    public static ClockInStatus(res: any) {
+        const ret: any = { code: 0, msg: '获取成功', data: {} }
+        if (res.data.length == 1) {
+            ret.data = res.data[0]
+            return ret
+        }
+        throw Error('无法获取打卡信息')
+    }
+
+    public static ClockIn(res: any) {
+        const ret: any = { code: 0, msg: '操作成功' }
+        if (res && res['code'] == 1 && res['message'].match('成功')) {
+            return ret
+        }
+        throw Error(res.message || '打卡失败')
+    }
 }
 
 export default Formatter

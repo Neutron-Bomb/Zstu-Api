@@ -32,11 +32,13 @@ async function getAcademicManagement(req: Request) {
         throw Error('参数必须提供studentId和password')
     }
     const cookieModel = await CookieModel
-    const cookie = await cookieModel.findOne({ $and: [ { studentId: studentId }, { permission: permission } ]}).then(doc => doc).catch(err => console.log(err))
+    const cookie = await cookieModel.findOne({ $and: [ { studentId: studentId }, { permission: permission } ]}).then(doc => doc)
     const am = (cookie && cookie.expire > (new Date()).getTime()) ? AcademicManagement.fromCookieJar(cookie.cookieJar) : AcademicManagement.fromUserPass(studentId, password)
     await am.login()
     /* Logined if no error threw */
-    cookieModel.findOneAndUpdate( { $and: [ { studentId: studentId }, { permission: permission } ]}, { cookieJar: am.getCookieJar()?.toJSON(), expire: (new Date()).getTime() + 86400 }, { upsert: true, new: true }).catch(err => console.log(err))
+    if (cookie && cookie.expire <= (new Date()).getTime() || !cookie) {
+        cookieModel.findOneAndUpdate( { $and: [ { studentId: studentId }, { permission: permission } ]}, { cookieJar: am.getCookieJar()?.toJSON(), expire: (new Date()).getTime() + 1800 }, { upsert: true, new: true }).catch(err => console.log(err))
+    }
     return am
 }
 
