@@ -118,7 +118,7 @@ class Formatter {
                     who: record['xm'],
                     where: record['cdmc'],
                     when: {
-                        week: record['day'],
+                        week: record['xqj'],
                         day: record['jcs']
                     },
                     class: record['kclb'],
