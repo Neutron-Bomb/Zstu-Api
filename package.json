@@ -1,6 +1,6 @@
 {
   "name": "zstu-api",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A simple api server of Zstu",
   "main": "app.js",
   "scripts": {
