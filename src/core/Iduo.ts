@@ -9,18 +9,22 @@ export const enum LOGIN_TYPE {
 }
 
 class Iduo {
-    private studentId: string
+    private studentId?: string
     private sso: SingleSignOn
     private session: AxiosInstance | undefined
     private accessToken: string | undefined
 
-    private constructor(studentId: string, password: string) {
+    private constructor(studentId?: string, password?: string, sso?: SingleSignOn) {
         this.studentId = studentId
-        this.sso = SingleSignOn.fromUserPass(studentId, password)
+        this.sso = sso || SingleSignOn.fromUserPass(studentId!, password!)
     }
 
     public static fromUserPass(studentId: string, password: string) {
         return new this(studentId, password)
+    }
+
+    public static fromSingleSignOn(sso: SingleSignOn) {
+        return new this(undefined, undefined, sso)
     }
 
     private randomCode() {
@@ -86,8 +90,8 @@ class Iduo {
         throw Error('Iduo未授权')
     }
 
-    public async getClockInStatus() {
-        const url = `http://fangyi.zstu.edu.cn:8008/form/api/DataSource/GetDataSourceByNo?sqlNo=JTDK_XS$${this.studentId}`
+    public async getClockInStatus(studentId: string) {
+        const url = `http://fangyi.zstu.edu.cn:8008/form/api/DataSource/GetDataSourceByNo?sqlNo=JTDK_XS$${studentId}`
         const headers = {
             'Authorization': `Bearer ${this.getToken()}`
         }
@@ -99,8 +103,8 @@ class Iduo {
         return Formatter.ClockInStatus(res)
     }
 
-    public async clockIn() {
-        const status = await this.getClockInStatus()
+    public async clockIn(studentId: string) {
+        const status = await this.getClockInStatus(studentId)
         const url = 'http://fangyi.zstu.edu.cn:8008/form/api/FormHandler/SubmitBusinessForm'
         const headers = {
             'Authorization': `Bearer ${this.getToken()}`,
@@ -152,7 +156,7 @@ class Iduo {
             task: {},
             sign: {},
             user: {
-                userId: `ZSTU/${this.studentId}`,
+                userId: `ZSTU/${status.data.IDCODE}`,
                 userName: status.data.NAME,
                 domain: "ZSTU"
             },

@@ -6,6 +6,10 @@ const CookieRecord = new Schema({
         type: String,
         required: true
     },
+    password: {
+        type: String,
+        required: true
+    },
     cookieJar: {
         type: JSON,
         required: true

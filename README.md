@@ -95,7 +95,7 @@ Response: Json 详见Formatter
 ├─controller 处理用户请求的Handler类
 ├─core       实际与接口交互的底层类
 ├─route      用户请求路径匹配
-├─schema     数据库模型
+├─model      数据库模型
 └─util       工具类
 ```
 

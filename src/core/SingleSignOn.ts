@@ -9,18 +9,22 @@ class SingleSignOn {
     private password?: string
     private session: AxiosInstance
 
-    private constructor(studentId?: string, password?: string, cookieJar?: CookieJar) {
+    private constructor(studentId?: string, password?: string, cookieJarJson?: string) {
         this.studentId = studentId
         this.password = password
-        this.session = createSession(cookieJar)
+        this.session = createSession(cookieJarJson ? CookieJar.fromJSON(cookieJarJson) : undefined)
     }
 
     public static fromUserPass(studentId: string, password: string) {
         return new this(studentId, password)
     }
 
-    public static fromCookieJar(cookieJar: CookieJar) {
-        return new this(undefined, undefined, cookieJar)
+    public static fromCookieJar(cookieJarJson: string) {
+        return new this(undefined, undefined, cookieJarJson)
+    }
+    
+    public getCookieJar() {
+        return this.session.defaults.jar
     }
 
     private encryptoPassword(password: string, crypto: string) {
