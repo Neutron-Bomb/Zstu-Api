@@ -11,12 +11,12 @@ async function getOneCard(req: Request) {
         throw Error('参数必须提供studentId和password')
     }
     const cookieModel = await CookieModel
-    const cookie = await cookieModel.findOne({ $and: [ { studentId: studentId }, { permission: permission } ]}).then(doc => doc).catch(err => console.log(err))
+    const cookie = await cookieModel.findOne({ $and: [ { studentId: studentId }, { permission: permission }, { password: password } ]}).then(doc => doc).catch(err => console.log(err))
     const oc = (cookie && cookie.expire > (new Date()).getTime()) ? OneCard.fromCookieJar(cookie.cookieJar) : OneCard.fromUserPass(studentId, password)
     await oc.login()
     /* Logined if no error threw */
     if (cookie && cookie.expire <= (new Date()).getTime() || !cookie) {
-        cookieModel.findOneAndUpdate( { $and: [ { studentId: studentId }, { permission: permission } ]}, { cookieJar: oc.getCookieJar()?.toJSON(), expire: (new Date()).getTime() + 1800 }, { upsert: true, new: true }).catch(err => console.log(err))
+        cookieModel.findOneAndUpdate( { $and: [ { studentId: studentId }, { permission: permission }, { password: password } ]}, { cookieJar: oc.getCookieJar()?.toJSON(), expire: (new Date()).getTime() + 1800 * 1000 }, { upsert: true, new: true }).catch(err => console.log(err))
     }
     return oc
     

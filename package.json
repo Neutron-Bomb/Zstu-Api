@@ -2,8 +2,9 @@
   "name": "zstu-api",
   "version": "1.0.0",
   "description": "A simple api server of Zstu",
-  "main": "app.ts",
+  "main": "app.js",
   "scripts": {
+    "init": "npm install && npm install tsc",
     "start": "node ./out/app.js"
   },
   "author": "Erohal",
