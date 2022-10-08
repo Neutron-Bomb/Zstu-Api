@@ -4,7 +4,7 @@ import SsoController from '../controller/SsoController'
 const SsoRouter = Router()
 
 /**
- * @api {POST} /clockin/status 获取打卡状态
+ * @api {POST} /sso/clockin/status 获取打卡状态
  * @apiGroup SSO
  * @apiDescription 获取前一次打卡时填入的信息
  * 
@@ -28,7 +28,7 @@ const SsoRouter = Router()
 SsoRouter.post('/clockin/status', SsoController.SsoClockInStatusHandler)
 
 /**
- * @api {POST} /clockin/ 打卡
+ * @api {POST} /sso/clockin/ 打卡
  * @apiGroup SSO
  * @apiDescription 按照前一次的打卡信息提交打卡
  * 

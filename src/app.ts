@@ -16,9 +16,7 @@ app.use(Logger.connectLogger(logger, {}))
 
 /* BodyParser using json and urlencoded */
 app.use(express.json())
-app.use(express.urlencoded({
-    extended: true
-}))
+app.use(express.urlencoded({ extended: true }))
 
 /* Registe routers */
 app.use('/common', CommonRouter)

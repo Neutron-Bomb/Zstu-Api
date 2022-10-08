@@ -42,6 +42,10 @@ class Iduo {
         return CryptoJS.enc.Base64url.stringify(CryptoJS.enc.Hex.parse(code))
     }
 
+    private base64Url(code: string) {
+        return CryptoJS.enc.Base64url.stringify(CryptoJS.enc.Utf8.parse(code))
+    }
+
     private async loginEpidemicPrevention() {
         const state = this.randomCode()
         const code_verifier = this.randomCode() + this.randomCode() + this.randomCode()
@@ -91,7 +95,7 @@ class Iduo {
     }
 
     public async getClockInStatus(studentId: string) {
-        const url = `http://fangyi.zstu.edu.cn:8008/form/api/DataSource/GetDataSourceByNo?sqlNo=JTDK_XS$${studentId}`
+        const url = `http://fangyi.zstu.edu.cn:8008/form/api/DataSource/GetDataSourceByNo?sqlNo=${this.base64Url('JTDK_XS$' + studentId)}`
         const headers = {
             'Authorization': `Bearer ${this.getToken()}`
         }
@@ -99,7 +103,7 @@ class Iduo {
             url: url,
             headers: headers
         }).then(value => value.data)
-        // TODO: Formatter
+        console.log(this.getToken())
         return Formatter.ClockInStatus(res)
     }
 
