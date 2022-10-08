@@ -7,6 +7,9 @@ import Error from './core/Error'
 import OneCardRouter from './route/OneCardRouter'
 import AcademicManagementRouter from './route/AcademicManagementRouter'
 import SsoRouter from './route/SsoRouter'
+import path from 'path'
+
+
 
 const app = express()
 const logger = Logger.getLogger('express')
@@ -25,6 +28,9 @@ app.use('/academic', AcademicManagementRouter)
 app.use('/sso', SsoRouter)
 
 app.use(Error.errorMidware)
+
+/* Request for doc/index.html */
+app.use(express.static('doc'))
 
 app.listen(expressConfig.port, () => {
     logger.info('Service started')
