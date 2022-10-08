@@ -15,7 +15,7 @@ class Error {
 
     public static errorMidware(err: any, req: any, res: any, next: any) {
         res.json({
-            code: 0,
+            code: -1,
             msg: err.message
         })
         next()
