@@ -95,7 +95,7 @@ class Iduo {
     }
 
     public async getClockInStatus(studentId: string) {
-        const url = `http://fangyi.zstu.edu.cn:8008/form/api/DataSource/GetDataSourceByNo?sqlNo=${this.base64Url('JTDK_XS$' + studentId)}`
+        const url = `http://fangyi.zstu.edu.cn:8008/form/api/DataSource/GetDataSourceByNo?sqlNo=${this.base64Url(`JTDK_XS$${studentId}`)}`
         const headers = {
             'Authorization': `Bearer ${this.getToken()}`
         }
@@ -103,7 +103,6 @@ class Iduo {
             url: url,
             headers: headers
         }).then(value => value.data)
-        console.log(this.getToken())
         return Formatter.ClockInStatus(res)
     }
 
