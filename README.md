@@ -2,40 +2,8 @@
 
 ## 简要说明
 
-Zstu-Api是编写Zstu-Bot的基础，也相当于是Api Bridger，Zstu-Api会转发给定请求并将格式转换为更加友好的格式。
-
-## 目前支持的功能（Zstu-Api-Core）
-
-### 统一认证登录系统
-
-- [x] 登录SSO
-
-### 教务系统
-
-- [x] 成绩查询
-- [x] 课表查询
-- [x] 考试信息查询
-- [x] 转专业情况查询
-
-### 体育管理系统
-
-- [x] 学期公里数查询
-
-### 费用
-
-- [x] 校园卡余额
-- [x] 剩余电量
-- [x] 今日用电
-- [x] 详细消费记录
-
-### 考勤
-
-- [x] 出入宿舍楼情况
-
-### 打卡
-
-- [x] 查询打卡
-- [x] 打卡
+Zstu-Api相当于是Api Bridger，Zstu-Api会转发给定请求并将格式转换为更加友好的格式。  
+本程序为个人学习Typescript & MongoDB练手之作，后续可能将不再进行维护。
 
 ## 安装
 
@@ -44,47 +12,14 @@ Zstu-Api是编写Zstu-Bot的基础，也相当于是Api Bridger，Zstu-Api会转
 2. 克隆并编译本项目
 git clone https://github.com/Neutron-Bomb/Zstu-Api
 cd Zstu-Api
-npm install && tsc
+npm install && npm install tsc && tsc
 3. 运行
 node out/app.js
 ```
 
 ## 使用
 
-### 教务系统
-
-```
-POST /academic/exams/{year}/{semester}     - 考试
-POST /academic/turnmajor/{year}/{semester} - 转专业
-POST /academic/schedule/{year}/{semester}  - 课表
-POST /academic/grades/{year}/{semester}    - 成绩
-
-Body: Json
-{
-	"studentId": "学号",
-	"password": "统一认证密码"
-}
-
-Response: Json 详见Formatter
-```
-
-### 一卡通
-
-```
-POST onecard/balace      - 余额
-POST onecard/consumption - 消费明细
-POST onecard/attendance  - 考勤
-
-Body: Json
-{
-	"studentId": "学号",
-	"password": "一卡通密码 | 默认为身份证后六位"
-}
-
-Response: Json 详见Formatter
-```
-
-### 补充ing
+使用文档在`doc`下，目前已加入10个接口
 
 ## 开发
 
